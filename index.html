@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Use Case Priority Calculator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --border: #dde3ea;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --danger: #ef4444;
+      --text: #1e293b;
+      --muted: #64748b;
+      --green: #16a34a;
+      --amber: #d97706;
+      --red: #dc2626;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    header h1 { font-size: 1.75rem; font-weight: 700; }
+    header p { color: var(--muted); margin-top: 0.4rem; font-size: 0.95rem; }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* Criteria config */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 0.5rem 1rem;
+      align-items: center;
+    }
+    .criteria-grid .header { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .criteria-name {
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .criteria-name input[type="text"] {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.9rem;
+      width: 100%;
+      color: var(--text);
+    }
+    .criteria-name input[type="text"]:focus { outline: 2px solid var(--primary); border-color: transparent; }
+
+    .weight-input {
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .weight-input input[type="number"] {
+      width: 60px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.9rem;
+      text-align: center;
+      color: var(--text);
+    }
+    .weight-input span { color: var(--muted); font-size: 0.85rem; }
+
+    .weight-total {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-top: 0.75rem; font-size: 0.85rem; color: var(--muted);
+    }
+    .weight-total .badge {
+      padding: 0.2rem 0.6rem; border-radius: 999px; font-weight: 600; font-size: 0.8rem;
+    }
+    .badge-ok { background: #dcfce7; color: var(--green); }
+    .badge-warn { background: #fef9c3; color: var(--amber); }
+    .badge-err { background: #fee2e2; color: var(--red); }
+
+    .btn {
+      padding: 0.45rem 1rem; border-radius: 7px; border: none; cursor: pointer;
+      font-size: 0.85rem; font-weight: 500; transition: background 0.15s;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-ghost:hover { background: var(--bg); }
+    .btn-danger { background: transparent; border: none; color: var(--danger); font-size: 1rem; line-height: 1; padding: 0.3rem 0.5rem; }
+    .btn-danger:hover { background: #fee2e2; border-radius: 6px; }
+
+    .row-actions { display: flex; gap: 0.5rem; align-items: center; }
+
+    /* Use cases table */
+    .toolbar {
+      display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .toolbar input[type="text"] {
+      flex: 1; min-width: 180px;
+      border: 1px solid var(--border); border-radius: 7px;
+      padding: 0.45rem 0.75rem; font-size: 0.9rem; color: var(--text);
+    }
+    .toolbar input[type="text"]:focus { outline: 2px solid var(--primary); border-color: transparent; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    thead th {
+      padding: 0.6rem 0.75rem; text-align: left;
+      font-size: 0.72rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    thead th.sortable { cursor: pointer; user-select: none; }
+    thead th.sortable:hover { color: var(--text); }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg); }
+    td { padding: 0.55rem 0.75rem; vertical-align: middle; }
+
+    td input[type="text"] {
+      border: none; background: transparent; font-size: 0.875rem;
+      width: 100%; min-width: 140px; color: var(--text);
+      padding: 0.2rem 0;
+    }
+    td input[type="text"]:focus { outline: 2px solid var(--primary); border-radius: 4px; padding: 0.2rem 0.3rem; }
+
+    .score-cell { display: flex; align-items: center; gap: 0.5rem; }
+    .score-select {
+      appearance: none;
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.3rem 0.5rem; font-size: 0.85rem;
+      background: var(--surface); color: var(--text); cursor: pointer; width: 52px;
+    }
+    .score-select:focus { outline: 2px solid var(--primary); }
+
+    .total-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 46px; height: 26px; border-radius: 6px;
+      font-weight: 700; font-size: 0.85rem;
+    }
+    .score-high { background: #dcfce7; color: var(--green); }
+    .score-mid  { background: #fef9c3; color: var(--amber); }
+    .score-low  { background: #fee2e2; color: var(--red); }
+
+    .rank-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      font-size: 0.75rem; font-weight: 700;
+    }
+
+    /* Results panel */
+    .results-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;
+    }
+    .result-card {
+      border: 1px solid var(--border); border-radius: 10px; padding: 1rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .result-card .rank { font-size: 0.75rem; color: var(--muted); }
+    .result-card .name { font-weight: 600; font-size: 0.95rem; }
+    .result-card .score-bar-wrap { height: 6px; border-radius: 999px; background: var(--bg); overflow: hidden; }
+    .result-card .score-bar { height: 100%; border-radius: 999px; transition: width 0.3s; }
+
+    footer { text-align: center; margin-top: 2.5rem; font-size: 0.8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>AI Use Case Priority Calculator</h1>
+    <p>Score your AI use cases across weighted criteria to find the highest-priority initiatives.</p>
+  </header>
+
+  <!-- Criteria config -->
+  <div class="card">
+    <h2>Scoring Criteria & Weights</h2>
+    <div class="criteria-grid" id="criteriaGrid">
+      <div class="header">Criterion</div>
+      <div class="header">Weight</div>
+      <div class="header"></div>
+    </div>
+    <div class="weight-total">
+      Total weight: <span class="badge" id="weightBadge">100%</span>
+      <span id="weightHint"></span>
+    </div>
+    <div style="margin-top:1rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+      <button class="btn btn-ghost" onclick="addCriterion()">+ Add criterion</button>
+      <button class="btn btn-ghost" onclick="resetCriteria()">Reset to defaults</button>
+    </div>
+  </div>
+
+  <!-- Use cases -->
+  <div class="card">
+    <h2>Use Cases</h2>
+    <div class="toolbar">
+      <input type="text" id="newUseCaseName" placeholder="Use case name…" onkeydown="if(event.key==='Enter') addUseCase()" />
+      <button class="btn btn-primary" onclick="addUseCase()">+ Add use case</button>
+    </div>
+    <div class="table-wrap">
+      <table id="useCaseTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card" id="resultsCard" style="display:none">
+    <h2>Priority Ranking</h2>
+    <div class="results-grid" id="resultsGrid"></div>
+  </div>
+</div>
+
+<footer>Scores 1–5 per criterion · Weighted total out of 100 · ≥70 = high priority</footer>
+
+<script>
+const DEFAULT_CRITERIA = [
+  { id: uid(), name: 'Business value (time / money)', weight: 25 },
+  { id: uid(), name: 'Strategic alignment',           weight: 15 },
+  { id: uid(), name: 'Technical feasibility',         weight: 20 },
+  { id: uid(), name: 'Resource availability',         weight: 10 },
+  { id: uid(), name: 'Data availability & quality',   weight: 20 },
+  { id: uid(), name: 'Risk & compliance',             weight: 10 },
+];
+
+let criteria = load('criteria') || DEFAULT_CRITERIA.map(c => ({ ...c }));
+let useCases = load('useCases') || [];
+
+function uid() { return Math.random().toString(36).slice(2, 9); }
+function save() {
+  localStorage.setItem('criteria', JSON.stringify(criteria));
+  localStorage.setItem('useCases', JSON.stringify(useCases));
+}
+function load(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } }
+
+// ---------- Criteria ----------
+function renderCriteria() {
+  const grid = document.getElementById('criteriaGrid');
+  // remove all rows (keep headers = first 3 children)
+  while (grid.children.length > 3) grid.removeChild(grid.lastChild);
+
+  criteria.forEach((c, i) => {
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'criteria-name';
+    nameDiv.innerHTML = `<input type="text" value="${esc(c.name)}" oninput="criteria[${i}].name=this.value;save();renderTable()" placeholder="Criterion name" />`;
+
+    const weightDiv = document.createElement('div');
+    weightDiv.className = 'weight-input';
+    weightDiv.innerHTML = `<input type="number" min="0" max="100" value="${c.weight}" oninput="criteria[${i}].weight=+this.value;save();updateWeightBadge();renderTable()" /><span>%</span>`;
+
+    const actDiv = document.createElement('div');
+    actDiv.innerHTML = `<button class="btn btn-danger" title="Remove" onclick="removeCriterion(${i})">✕</button>`;
+
+    grid.append(nameDiv, weightDiv, actDiv);
+  });
+
+  updateWeightBadge();
+}
+
+function updateWeightBadge() {
+  const total = criteria.reduce((s, c) => s + (c.weight || 0), 0);
+  const badge = document.getElementById('weightBadge');
+  const hint  = document.getElementById('weightHint');
+  badge.textContent = total + '%';
+  badge.className = 'badge ' + (total === 100 ? 'badge-ok' : total < 100 ? 'badge-warn' : 'badge-err');
+  hint.textContent  = total === 100 ? '' : total < 100 ? `(${100 - total}% unallocated)` : `(${total - 100}% over — reduce weights)`;
+}
+
+function addCriterion() {
+  criteria.push({ id: uid(), name: '', weight: 0 });
+  save(); renderCriteria(); renderTable();
+}
+function removeCriterion(i) {
+  criteria.splice(i, 1);
+  save(); renderCriteria(); renderTable();
+}
+function resetCriteria() {
+  if (!confirm('Reset criteria to defaults? Scores will be cleared.')) return;
+  criteria = DEFAULT_CRITERIA.map(c => ({ ...c, id: uid() }));
+  useCases.forEach(u => u.scores = {});
+  save(); renderCriteria(); renderTable();
+}
+
+// ---------- Use Cases ----------
+function renderTable() {
+  const head = document.getElementById('tableHead');
+  const body = document.getElementById('tableBody');
+
+  head.innerHTML = `<tr>
+    <th style="width:28px">#</th>
+    <th>Use Case</th>
+    ${criteria.map(c => `<th class="sortable" title="${esc(c.name)}">${esc(c.name.length > 18 ? c.name.slice(0,16)+'…' : c.name)} <small style="color:var(--muted);font-weight:400">${c.weight}%</small></th>`).join('')}
+    <th class="sortable" onclick="sortByScore()">Score ▾</th>
+    <th></th>
+  </tr>`;
+
+  const sorted = [...useCases].map((u, origIdx) => ({ ...u, origIdx }))
+    .sort((a, b) => calcScore(b) - calcScore(a));
+
+  body.innerHTML = '';
+  sorted.forEach((u, rank) => {
+    const score = calcScore(u);
+    const cls   = score >= 70 ? 'score-high' : score >= 40 ? 'score-mid' : 'score-low';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="rank-badge">${rank + 1}</span></td>
+      <td><input type="text" value="${esc(u.name)}" placeholder="Use case name"
+           oninput="useCases[${u.origIdx}].name=this.value;save();renderResults()" /></td>
+      ${criteria.map(c => `
+        <td class="score-cell">
+          <select class="score-select" onchange="useCases[${u.origIdx}].scores['${c.id}']=+this.value;save();renderTable()">
+            ${[0,1,2,3,4,5].map(v => `<option value="${v}" ${(u.scores[c.id]||0)==v?'selected':''}>${v}</option>`).join('')}
+          </select>
+        </td>`).join('')}
+      <td><span class="total-badge ${cls}">${score}</span></td>
+      <td><button class="btn btn-danger" onclick="removeUseCase(${u.origIdx})">✕</button></td>`;
+    body.appendChild(tr);
+  });
+
+  renderResults();
+}
+
+function calcScore(u) {
+  const totalWeight = criteria.reduce((s, c) => s + (c.weight || 0), 0);
+  if (totalWeight === 0) return 0;
+  const raw = criteria.reduce((s, c) => s + (c.weight || 0) * ((u.scores || {})[c.id] || 0), 0);
+  return Math.round(raw / totalWeight * 20); // normalise 1–5 → 20 points per unit → max 100
+}
+
+function addUseCase() {
+  const input = document.getElementById('newUseCaseName');
+  const name  = input.value.trim();
+  if (!name) return;
+  useCases.push({ id: uid(), name, scores: {} });
+  input.value = '';
+  save(); renderTable();
+}
+function removeUseCase(i) {
+  useCases.splice(i, 1);
+  save(); renderTable();
+}
+
+// ---------- Results ----------
+function renderResults() {
+  const card = document.getElementById('resultsCard');
+  if (useCases.length === 0) { card.style.display = 'none'; return; }
+  card.style.display = '';
+
+  const sorted = [...useCases].map(u => ({ ...u, score: calcScore(u) }))
+    .sort((a, b) => b.score - a.score);
+
+  document.getElementById('resultsGrid').innerHTML = sorted.map((u, i) => {
+    const cls   = u.score >= 70 ? '#16a34a' : u.score >= 40 ? '#d97706' : '#dc2626';
+    return `<div class="result-card">
+      <div class="rank">#${i + 1} ${u.score >= 70 ? '· High priority' : u.score >= 40 ? '· Medium priority' : '· Low priority'}</div>
+      <div class="name">${esc(u.name || '(unnamed)')}</div>
+      <div class="score-bar-wrap"><div class="score-bar" style="width:${u.score}%;background:${cls}"></div></div>
+      <div style="font-size:0.8rem;color:var(--muted)">${u.score} / 100</div>
+    </div>`;
+  }).join('');
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ---------- Init ----------
+renderCriteria();
+renderTable();
+</script>
+</body>
+</html>
