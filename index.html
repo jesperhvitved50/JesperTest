@@ -38,7 +38,6 @@
 
     .container { max-width: 1100px; margin: 0 auto; }
 
-    /* Criteria config */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -107,7 +106,6 @@
 
     .row-actions { display: flex; gap: 0.5rem; align-items: center; }
 
-    /* Use cases table */
     .toolbar {
       display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;
     }
@@ -165,7 +163,6 @@
       font-size: 0.75rem; font-weight: 700;
     }
 
-    /* Results panel */
     .results-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;
     }
@@ -188,9 +185,8 @@
     <p>Score your AI use cases across weighted criteria to find the highest-priority initiatives.</p>
   </header>
 
-  <!-- Criteria config -->
   <div class="card">
-    <h2>Scoring Criteria & Weights</h2>
+    <h2>Scoring Criteria &amp; Weights</h2>
     <div class="criteria-grid" id="criteriaGrid">
       <div class="header">Criterion</div>
       <div class="header">Weight</div>
@@ -206,7 +202,6 @@
     </div>
   </div>
 
-  <!-- Use cases -->
   <div class="card">
     <h2>Use Cases</h2>
     <div class="toolbar">
@@ -221,7 +216,6 @@
     </div>
   </div>
 
-  <!-- Results -->
   <div class="card" id="resultsCard" style="display:none">
     <h2>Priority Ranking</h2>
     <div class="results-grid" id="resultsGrid"></div>
@@ -250,10 +244,8 @@ function save() {
 }
 function load(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } }
 
-// ---------- Criteria ----------
 function renderCriteria() {
   const grid = document.getElementById('criteriaGrid');
-  // remove all rows (keep headers = first 3 children)
   while (grid.children.length > 3) grid.removeChild(grid.lastChild);
 
   criteria.forEach((c, i) => {
@@ -266,7 +258,7 @@ function renderCriteria() {
     weightDiv.innerHTML = `<input type="number" min="0" max="100" value="${c.weight}" oninput="criteria[${i}].weight=+this.value;save();updateWeightBadge();renderTable()" /><span>%</span>`;
 
     const actDiv = document.createElement('div');
-    actDiv.innerHTML = `<button class="btn btn-danger" title="Remove" onclick="removeCriterion(${i})">✕</button>`;
+    actDiv.innerHTML = `<button class="btn btn-danger" title="Remove" onclick="removeCriterion(${i})">&#x2715;</button>`;
 
     grid.append(nameDiv, weightDiv, actDiv);
   });
@@ -298,7 +290,6 @@ function resetCriteria() {
   save(); renderCriteria(); renderTable();
 }
 
-// ---------- Use Cases ----------
 function renderTable() {
   const head = document.getElementById('tableHead');
   const body = document.getElementById('tableBody');
@@ -307,7 +298,7 @@ function renderTable() {
     <th style="width:28px">#</th>
     <th>Use Case</th>
     ${criteria.map(c => `<th class="sortable" title="${esc(c.name)}">${esc(c.name.length > 18 ? c.name.slice(0,16)+'…' : c.name)} <small style="color:var(--muted);font-weight:400">${c.weight}%</small></th>`).join('')}
-    <th class="sortable" onclick="sortByScore()">Score ▾</th>
+    <th>Score</th>
     <th></th>
   </tr>`;
 
@@ -330,7 +321,7 @@ function renderTable() {
           </select>
         </td>`).join('')}
       <td><span class="total-badge ${cls}">${score}</span></td>
-      <td><button class="btn btn-danger" onclick="removeUseCase(${u.origIdx})">✕</button></td>`;
+      <td><button class="btn btn-danger" onclick="removeUseCase(${u.origIdx})">&#x2715;</button></td>`;
     body.appendChild(tr);
   });
 
@@ -341,7 +332,7 @@ function calcScore(u) {
   const totalWeight = criteria.reduce((s, c) => s + (c.weight || 0), 0);
   if (totalWeight === 0) return 0;
   const raw = criteria.reduce((s, c) => s + (c.weight || 0) * ((u.scores || {})[c.id] || 0), 0);
-  return Math.round(raw / totalWeight * 20); // normalise 1–5 → 20 points per unit → max 100
+  return Math.round(raw / totalWeight * 20);
 }
 
 function addUseCase() {
@@ -357,7 +348,6 @@ function removeUseCase(i) {
   save(); renderTable();
 }
 
-// ---------- Results ----------
 function renderResults() {
   const card = document.getElementById('resultsCard');
   if (useCases.length === 0) { card.style.display = 'none'; return; }
@@ -381,7 +371,6 @@ function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ---------- Init ----------
 renderCriteria();
 renderTable();
 </script>
