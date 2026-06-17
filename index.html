@@ -104,8 +104,6 @@
     .btn-danger { background: transparent; border: none; color: var(--danger); font-size: 1rem; line-height: 1; padding: 0.3rem 0.5rem; }
     .btn-danger:hover { background: #fee2e2; border-radius: 6px; }
 
-    .row-actions { display: flex; gap: 0.5rem; align-items: center; }
-
     .toolbar {
       display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;
     }
@@ -124,8 +122,6 @@
       text-transform: uppercase; letter-spacing: 0.05em;
       border-bottom: 1px solid var(--border); white-space: nowrap;
     }
-    thead th.sortable { cursor: pointer; user-select: none; }
-    thead th.sortable:hover { color: var(--text); }
     tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--bg); }
@@ -294,13 +290,7 @@ function renderTable() {
   const head = document.getElementById('tableHead');
   const body = document.getElementById('tableBody');
 
-  head.innerHTML = `<tr>
-    <th style="width:28px">#</th>
-    <th>Use Case</th>
-    ${criteria.map(c => `<th class="sortable" title="${esc(c.name)}">${esc(c.name.length > 18 ? c.name.slice(0,16)+'…' : c.name)} <small style="color:var(--muted);font-weight:400">${c.weight}%</small></th>`).join('')}
-    <th>Score</th>
-    <th></th>
-  </tr>`;
+  head.innerHTML = `<tr><th style="width:28px">#</th><th>Use Case</th>${criteria.map(c => `<th title="${esc(c.name)}">${esc(c.name.length > 18 ? c.name.slice(0,16)+'…' : c.name)} <small style="color:var(--muted);font-weight:400">${c.weight}%</small></th>`).join('')}<th>Score</th><th></th></tr>`;
 
   const sorted = [...useCases].map((u, origIdx) => ({ ...u, origIdx }))
     .sort((a, b) => calcScore(b) - calcScore(a));
@@ -310,18 +300,7 @@ function renderTable() {
     const score = calcScore(u);
     const cls   = score >= 70 ? 'score-high' : score >= 40 ? 'score-mid' : 'score-low';
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><span class="rank-badge">${rank + 1}</span></td>
-      <td><input type="text" value="${esc(u.name)}" placeholder="Use case name"
-           oninput="useCases[${u.origIdx}].name=this.value;save();renderResults()" /></td>
-      ${criteria.map(c => `
-        <td class="score-cell">
-          <select class="score-select" onchange="useCases[${u.origIdx}].scores['${c.id}']=+this.value;save();renderTable()">
-            ${[0,1,2,3,4,5].map(v => `<option value="${v}" ${(u.scores[c.id]||0)==v?'selected':''}>${v}</option>`).join('')}
-          </select>
-        </td>`).join('')}
-      <td><span class="total-badge ${cls}">${score}</span></td>
-      <td><button class="btn btn-danger" onclick="removeUseCase(${u.origIdx})">&#x2715;</button></td>`;
+    tr.innerHTML = `<td><span class="rank-badge">${rank + 1}</span></td><td><input type="text" value="${esc(u.name)}" placeholder="Use case name" oninput="useCases[${u.origIdx}].name=this.value;save();renderResults()" /></td>${criteria.map(c => `<td class="score-cell"><select class="score-select" onchange="useCases[${u.origIdx}].scores['${c.id}']=+this.value;save();renderTable()">${[0,1,2,3,4,5].map(v => `<option value="${v}" ${(u.scores[c.id]||0)==v?'selected':''}>${v}</option>`).join('')}</select></td>`).join('')}<td><span class="total-badge ${cls}">${score}</span></td><td><button class="btn btn-danger" onclick="removeUseCase(${u.origIdx})">&#x2715;</button></td>`;
     body.appendChild(tr);
   });
 
@@ -357,13 +336,8 @@ function renderResults() {
     .sort((a, b) => b.score - a.score);
 
   document.getElementById('resultsGrid').innerHTML = sorted.map((u, i) => {
-    const cls   = u.score >= 70 ? '#16a34a' : u.score >= 40 ? '#d97706' : '#dc2626';
-    return `<div class="result-card">
-      <div class="rank">#${i + 1} ${u.score >= 70 ? '· High priority' : u.score >= 40 ? '· Medium priority' : '· Low priority'}</div>
-      <div class="name">${esc(u.name || '(unnamed)')}</div>
-      <div class="score-bar-wrap"><div class="score-bar" style="width:${u.score}%;background:${cls}"></div></div>
-      <div style="font-size:0.8rem;color:var(--muted)">${u.score} / 100</div>
-    </div>`;
+    const cls = u.score >= 70 ? '#16a34a' : u.score >= 40 ? '#d97706' : '#dc2626';
+    return `<div class="result-card"><div class="rank">#${i + 1} ${u.score >= 70 ? '· High priority' : u.score >= 40 ? '· Medium priority' : '· Low priority'}</div><div class="name">${esc(u.name || '(unnamed)')}</div><div class="score-bar-wrap"><div class="score-bar" style="width:${u.score}%;background:${cls}"></div></div><div style="font-size:0.8rem;color:var(--muted)">${u.score} / 100</div></div>`;
   }).join('');
 }
 
