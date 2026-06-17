@@ -323,12 +323,7 @@ function renderTable() {
       <td><span class="rank-badge">${rank + 1}</span></td>
       <td><input type="text" value="${esc(u.name)}" placeholder="Use case name"
            oninput="useCases[${u.origIdx}].name=this.value;save();renderResults()" /></td>
-      ${criteria.map(c => `
-        <td class="score-cell">
-          <select class="score-select" onchange="useCases[${u.origIdx}].scores['${c.id}']=+this.value;save();renderTable()">
-            ${[0,1,2,3,4,5].map(v => `<option value="${v}" ${(u.scores[c.id]||0)==v?'selected':''}>${v}</option>`).join('')}
-          </select>
-        </td>`).join('')}
+      ${criteria.map(c => `<td class="score-cell"><select class="score-select" onchange="useCases[${u.origIdx}].scores['${c.id}']=+this.value;save();renderTable()">${[0,1,2,3,4,5].map(v => `<option value="${v}" ${(u.scores[c.id]||0)==v?'selected':''}>${v}</option>`).join('')}</select></td>`).join('')}
       <td><span class="total-badge ${cls}">${score}</span></td>
       <td><button class="btn btn-danger" onclick="removeUseCase(${u.origIdx})">✕</button></td>`;
     body.appendChild(tr);
