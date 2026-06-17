@@ -140,7 +140,7 @@
     }
     td input[type="text"]:focus { outline: 2px solid var(--primary); border-radius: 4px; padding: 0.2rem 0.3rem; }
 
-    .score-cell { display: flex; align-items: center; gap: 0.5rem; }
+    .score-cell-inner { display: flex; align-items: center; gap: 0.5rem; }
     .score-select {
       appearance: none;
       border: 1px solid var(--border); border-radius: 6px;
@@ -329,7 +329,8 @@ function renderTable() {
     tdName.appendChild(nameInput);
 
     criteria.forEach(c => {
-      const td = tr.insertCell(); td.className = 'score-cell';
+      const td = tr.insertCell();
+      const inner = document.createElement('div'); inner.className = 'score-cell-inner'; td.appendChild(inner);
       const sel = document.createElement('select'); sel.className = 'score-select';
       [0,1,2,3,4,5].forEach(v => {
         const opt = document.createElement('option'); opt.value = v; opt.textContent = v;
@@ -337,7 +338,7 @@ function renderTable() {
         sel.appendChild(opt);
       });
       sel.addEventListener('change', () => { useCases[u.origIdx].scores[c.id] = +sel.value; save(); renderTable(); });
-      td.appendChild(sel);
+      inner.appendChild(sel);
     });
 
     const tdScore = tr.insertCell(); tdScore.innerHTML = `<span class="total-badge ${cls}">${score}</span>`;
