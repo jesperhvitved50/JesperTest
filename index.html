@@ -29,10 +29,7 @@
       padding: 2rem 1rem;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+    header { text-align: center; margin-bottom: 2rem; }
     header h1 { font-size: 1.75rem; font-weight: 700; }
     header p { color: var(--muted); margin-top: 0.4rem; font-size: 0.95rem; }
 
@@ -54,49 +51,26 @@
       align-items: center;
     }
     .criteria-grid .header { font-size: 0.75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-
-    .criteria-name {
-      display: flex; align-items: center; gap: 0.5rem;
-    }
+    .criteria-name { display: flex; align-items: center; gap: 0.5rem; }
     .criteria-name input[type="text"] {
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.4rem 0.6rem;
-      font-size: 0.9rem;
-      width: 100%;
-      color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.4rem 0.6rem; font-size: 0.9rem; width: 100%; color: var(--text);
     }
     .criteria-name input[type="text"]:focus { outline: 2px solid var(--primary); border-color: transparent; }
-
-    .weight-input {
-      display: flex; align-items: center; gap: 0.4rem;
-    }
+    .weight-input { display: flex; align-items: center; gap: 0.4rem; }
     .weight-input input[type="number"] {
-      width: 60px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.4rem 0.5rem;
-      font-size: 0.9rem;
-      text-align: center;
-      color: var(--text);
+      width: 60px; border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.4rem 0.5rem; font-size: 0.9rem; text-align: center; color: var(--text);
     }
     .weight-input span { color: var(--muted); font-size: 0.85rem; }
 
-    .weight-total {
-      display: flex; align-items: center; gap: 0.5rem;
-      margin-top: 0.75rem; font-size: 0.85rem; color: var(--muted);
-    }
-    .weight-total .badge {
-      padding: 0.2rem 0.6rem; border-radius: 999px; font-weight: 600; font-size: 0.8rem;
-    }
-    .badge-ok { background: #dcfce7; color: var(--green); }
+    .weight-total { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; font-size: 0.85rem; color: var(--muted); }
+    .weight-total .badge { padding: 0.2rem 0.6rem; border-radius: 999px; font-weight: 600; font-size: 0.8rem; }
+    .badge-ok   { background: #dcfce7; color: var(--green); }
     .badge-warn { background: #fef9c3; color: var(--amber); }
-    .badge-err { background: #fee2e2; color: var(--red); }
+    .badge-err  { background: #fee2e2; color: var(--red); }
 
-    .btn {
-      padding: 0.45rem 1rem; border-radius: 7px; border: none; cursor: pointer;
-      font-size: 0.85rem; font-weight: 500; transition: background 0.15s;
-    }
+    .btn { padding: 0.45rem 1rem; border-radius: 7px; border: none; cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: background 0.15s; }
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
@@ -104,12 +78,9 @@
     .btn-danger { background: transparent; border: none; color: var(--danger); font-size: 1rem; line-height: 1; padding: 0.3rem 0.5rem; }
     .btn-danger:hover { background: #fee2e2; border-radius: 6px; }
 
-    .toolbar {
-      display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;
-    }
+    .toolbar { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
     .toolbar input[type="text"] {
-      flex: 1; min-width: 180px;
-      border: 1px solid var(--border); border-radius: 7px;
+      flex: 1; min-width: 180px; border: 1px solid var(--border); border-radius: 7px;
       padding: 0.45rem 0.75rem; font-size: 0.9rem; color: var(--text);
     }
     .toolbar input[type="text"]:focus { outline: 2px solid var(--primary); border-color: transparent; }
@@ -126,15 +97,12 @@
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--bg); }
     td { padding: 0.55rem 0.75rem; vertical-align: middle; }
-
     td input[type="text"] {
       border: none; background: transparent; font-size: 0.875rem;
-      width: 100%; min-width: 140px; color: var(--text);
-      padding: 0.2rem 0;
+      width: 100%; min-width: 140px; color: var(--text); padding: 0.2rem 0;
     }
     td input[type="text"]:focus { outline: 2px solid var(--primary); border-radius: 4px; padding: 0.2rem 0.3rem; }
 
-    .score-cell { display: flex; align-items: center; gap: 0.5rem; }
     .score-select {
       appearance: none;
       border: 1px solid var(--border); border-radius: 6px;
@@ -145,8 +113,7 @@
 
     .total-badge {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 46px; height: 26px; border-radius: 6px;
-      font-weight: 700; font-size: 0.85rem;
+      width: 46px; height: 26px; border-radius: 6px; font-weight: 700; font-size: 0.85rem;
     }
     .score-high { background: #dcfce7; color: var(--green); }
     .score-mid  { background: #fef9c3; color: var(--amber); }
@@ -155,13 +122,10 @@
     .rank-badge {
       display: inline-flex; align-items: center; justify-content: center;
       width: 26px; height: 26px; border-radius: 50%;
-      background: var(--primary); color: #fff;
-      font-size: 0.75rem; font-weight: 700;
+      background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 700;
     }
 
-    .results-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;
-    }
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
     .result-card {
       border: 1px solid var(--border); border-radius: 10px; padding: 1rem;
       display: flex; flex-direction: column; gap: 0.4rem;
@@ -243,22 +207,17 @@ function load(key) { try { return JSON.parse(localStorage.getItem(key)); } catch
 function renderCriteria() {
   const grid = document.getElementById('criteriaGrid');
   while (grid.children.length > 3) grid.removeChild(grid.lastChild);
-
   criteria.forEach((c, i) => {
     const nameDiv = document.createElement('div');
     nameDiv.className = 'criteria-name';
     nameDiv.innerHTML = `<input type="text" value="${esc(c.name)}" oninput="criteria[${i}].name=this.value;save();renderTable()" placeholder="Criterion name" />`;
-
     const weightDiv = document.createElement('div');
     weightDiv.className = 'weight-input';
     weightDiv.innerHTML = `<input type="number" min="0" max="100" value="${c.weight}" oninput="criteria[${i}].weight=+this.value;save();updateWeightBadge();renderTable()" /><span>%</span>`;
-
     const actDiv = document.createElement('div');
     actDiv.innerHTML = `<button class="btn btn-danger" title="Remove" onclick="removeCriterion(${i})">&#x2715;</button>`;
-
     grid.append(nameDiv, weightDiv, actDiv);
   });
-
   updateWeightBadge();
 }
 
@@ -268,7 +227,7 @@ function updateWeightBadge() {
   const hint  = document.getElementById('weightHint');
   badge.textContent = total + '%';
   badge.className = 'badge ' + (total === 100 ? 'badge-ok' : total < 100 ? 'badge-warn' : 'badge-err');
-  hint.textContent  = total === 100 ? '' : total < 100 ? `(${100 - total}% unallocated)` : `(${total - 100}% over — reduce weights)`;
+  hint.textContent = total === 100 ? '' : total < 100 ? `(${100 - total}% unallocated)` : `(${total - 100}% over — reduce weights)`;
 }
 
 function addCriterion() {
@@ -311,8 +270,9 @@ function renderTable() {
     tdName.appendChild(nameInput);
 
     criteria.forEach(c => {
-      const td = tr.insertCell(); td.className = 'score-cell';
-      const sel = document.createElement('select'); sel.className = 'score-select';
+      const td = tr.insertCell();
+      const sel = document.createElement('select');
+      sel.className = 'score-select';
       [0,1,2,3,4,5].forEach(v => {
         const opt = document.createElement('option'); opt.value = v; opt.textContent = v;
         if ((u.scores[c.id] || 0) === v) opt.selected = true;
@@ -361,10 +321,8 @@ function renderResults() {
   const card = document.getElementById('resultsCard');
   if (useCases.length === 0) { card.style.display = 'none'; return; }
   card.style.display = '';
-
   const sorted = [...useCases].map(u => ({ ...u, score: calcScore(u) }))
     .sort((a, b) => b.score - a.score);
-
   document.getElementById('resultsGrid').innerHTML = sorted.map((u, i) => {
     const cls = u.score >= 70 ? '#16a34a' : u.score >= 40 ? '#d97706' : '#dc2626';
     return `<div class="result-card"><div class="rank">#${i + 1} ${u.score >= 70 ? '· High priority' : u.score >= 40 ? '· Medium priority' : '· Low priority'}</div><div class="name">${esc(u.name || '(unnamed)')}</div><div class="score-bar-wrap"><div class="score-bar" style="width:${u.score}%;background:${cls}"></div></div><div style="font-size:0.8rem;color:var(--muted)">${u.score} / 100</div></div>`;
